@@ -1,0 +1,30 @@
+{
+  "Defaults": {
+    "SIMD": [1, "MVAU"],
+    "PE": [1, "MVAU"],
+    "resType": ["lut", "MVAU"]
+  },
+
+  "MVAU_hls_0":  { "SIMD": 9,    "PE": 32,  "MW": 27  },
+  "MVAU_hls_1":  { "SIMD": 32,   "PE": 64,  "MW": 288  },
+  "MVAU_hls_2":  { "SIMD": 64,  "PE": 128, "MW": 576 },
+  "MVAU_hls_3":  { "SIMD": 128,  "PE": 256, "MW": 1152 },
+  "MVAU_hls_4":  { "SIMD": 128, "PE": 256, "MW": 1024 },
+  "MVAU_hls_5":  { "SIMD": 64,  "PE": 128, "MW": 256 },
+  "MVAU_rtl_0":  { "SIMD": 8,  "PE": 10,  "MW": 128  },
+
+  "ConvolutionInputGenerator_rtl_0": {},
+  "ConvolutionInputGenerator_rtl_1": {},
+  "ConvolutionInputGenerator_rtl_2": {},
+  "ConvolutionInputGenerator_rtl_3": {},
+
+  "FMPadding_rtl_0": {},
+  "FMPadding_rtl_1": {},
+  "FMPadding_rtl_2": {},
+  "FMPadding_rtl_3": {},
+
+  "StreamingMaxPool_hls_0": {},
+  "StreamingMaxPool_hls_1": {},
+  "StreamingMaxPool_hls_2": {},
+  "StreamingMaxPool_hls_3": {}
+}
