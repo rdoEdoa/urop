@@ -43,7 +43,12 @@ def main():
         print(f"Error: The model '{model_file}' does not exist")
         return 1
 
-    output_dir = os.path.join("models", args.directory, args.output_dir)
+    # If the folding config file is not the default, append its name to the output directory
+    if args.folding_config != "folding_config.json":
+        output_dir = os.path.join("models", args.directory, args.output_dir + "_" + os.path.splitext(args.folding_config)[0])
+    else:
+        output_dir = os.path.join("models", args.directory, args.output_dir)
+
     folding_config_path = os.path.join("config", args.folding_config)
 
     if args.verbose:
