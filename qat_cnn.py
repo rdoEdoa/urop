@@ -5,15 +5,23 @@ import torchvision.transforms as transforms
 import matplotlib.pyplot as plt
 import numpy as np
 
+from torch.nn import Identity
+
 # Brevitas imports
 from brevitas.nn import QuantConv2d, QuantLinear, QuantReLU, QuantIdentity
-from brevitas.quant import Int8ActPerTensorFixedPoint, Int8WeightPerTensorFixedPoint
+from brevitas.quant import Int8ActPerTensorFixedPoint, Uint8ActPerTensorFixedPoint, Int8WeightPerTensorFixedPoint
 
 import os
 
 # Specify the directory for saving checkpoints
-checkpoint_dir = './checkpoints_8b'
+checkpoint_dir = './acc_2b/checkpoints_4b'
 os.makedirs(checkpoint_dir, exist_ok=True)
+
+# Variable parameters definition
+bit_width = 4
+num_epochs = 40
+desired_epoch = 40
+acc_bit = 2
 
 # Save model and optimizer state
 def save_checkpoint(epoch, model, optimizer, loss, checkpoint_dir, filename="checkpoint.pth.tar"):
@@ -151,7 +159,7 @@ def print_accumulator_bitwidth(model):
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 # Hyper-parameters
-num_epochs = 60
+
 batch_size = 4
 learning_rate = 0.001
 
@@ -177,34 +185,38 @@ classes = ('plane', 'car', 'bird', 'cat',
 class QuantCNN(torch.nn.Module):
     def __init__(self):
         super(QuantCNN, self).__init__()
-        bit_width = 1
+        
         self.quant_input = QuantIdentity(act_quant=Int8ActPerTensorFixedPoint, bit_width=bit_width, return_quant_tensor=True)
-        self.relu = QuantReLU(act_quant=Int8ActPerTensorFixedPoint, bit_width=bit_width, return_quant_tensor=True)
+        self.relu = QuantReLU(act_quant=Uint8ActPerTensorFixedPoint, bit_width=bit_width, return_quant_tensor=True)
 
-        self.conv1 = QuantConv2d(3, 32, 3, padding=1, weight_quant=Int8WeightPerTensorFixedPoint)
-        self.conv2 = QuantConv2d(32, 64, 3, padding=1, weight_quant=Int8WeightPerTensorFixedPoint)
-        self.conv3 = QuantConv2d(64, 128, 3, padding=1, weight_quant=Int8WeightPerTensorFixedPoint)
-        self.conv4 = QuantConv2d(128, 256, 3, padding=1, weight_quant=Int8WeightPerTensorFixedPoint)
+        self.conv1 = QuantConv2d(3, 32, 3, padding=1, weight_quant=Int8WeightPerTensorFixedPoint, return_quant_tensor=True, accumulator_bit_width=acc_bit)
+        self.conv2 = QuantConv2d(32, 64, 3, padding=1, weight_quant=Int8WeightPerTensorFixedPoint, return_quant_tensor=True, accumulator_bit_width=acc_bit)
+        self.conv3 = QuantConv2d(64, 128, 3, padding=1, weight_quant=Int8WeightPerTensorFixedPoint, return_quant_tensor=True, accumulator_bit_width=acc_bit)
+        self.conv4 = QuantConv2d(128, 256, 3, padding=1, weight_quant=Int8WeightPerTensorFixedPoint, return_quant_tensor=True, accumulator_bit_width=acc_bit)
 
-        self.pool = torch.nn.MaxPool2d(2, 2)
+        self.pool = torch.nn.MaxPool2d(2, 2)  # restore this if it was replaced
         self.dropout = torch.nn.Dropout(0.5)
 
         self._get_flatten_size()
 
-        self.fc1 = QuantLinear(self.flatten_size, 256, weight_quant=Int8WeightPerTensorFixedPoint)
+        self.fc1 = QuantLinear(self.flatten_size, 256, bias=True, weight_quant=Int8WeightPerTensorFixedPoint, return_quant_tensor=True, accumulator_bit_width=acc_bit)
 
-        self.fc2 = QuantLinear(256, 128, weight_quant=Int8WeightPerTensorFixedPoint)
+        self.fc2 = QuantLinear(256, 128, bias=True, weight_quant=Int8WeightPerTensorFixedPoint, return_quant_tensor=True, accumulator_bit_width=acc_bit)
 
-        self.fc3 = QuantLinear(128, 10, weight_quant=Int8WeightPerTensorFixedPoint)
+        self.fc3 = QuantLinear(128, 10, bias=True, weight_quant=Int8WeightPerTensorFixedPoint, return_quant_tensor=False, accumulator_bit_width=acc_bit)
 
     def _get_flatten_size(self):
         with torch.no_grad():
-            dummy = torch.zeros(1, 3, 32, 32)
+            dummy = torch.zeros(1, 3, 32, 32)  # shape must match input
+            dummy = self.quant_input(dummy)   # <- add this line
             dummy = self.pool(self.relu(self.conv1(dummy)))
             dummy = self.pool(self.relu(self.conv2(dummy)))
             dummy = self.pool(self.relu(self.conv3(dummy)))
             dummy = self.pool(self.relu(self.conv4(dummy)))
-            self.flatten_size = dummy.view(1, -1).size(1)
+            self.flatten_size = dummy.shape[1] * dummy.shape[2] * dummy.shape[3]
+            self.flatten_size = 1024
+
+
 
     def forward(self, x):
         x = self.quant_input(x)
@@ -227,10 +239,6 @@ optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate)
 
 # === Try to load existing checkpoint ===
 import re
-
-# Find all matching checkpoint files with their epochs
-# Your desired epoch to load
-desired_epoch = 60
 
 # Find all checkpoints in the directory
 checkpoints = {}
