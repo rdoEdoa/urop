@@ -66,10 +66,7 @@ def create_build_config(output_dir):
     cfg.output_types = [
         DataflowOutputType.ESTIMATE_REPORTS,
         DataflowOutputType.RTLSIM_PERFORMANCE,
-        DataflowOutputType.OOC_SYNTH,
         DataflowOutputType.BITFILE,
-        DataflowOutputType.PYNQ_DRIVER,
-        DataflowOutputType.DEPLOYMENT_PACKAGE,
         DataflowOutputType.STITCHED_IP
     ]
     cfg.mvau_optimization = "resource"
