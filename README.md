@@ -43,7 +43,7 @@ Then, while inside the FINN environment (to enter it, just run `./run-docker` wh
 To run it:
 
 ```
-python build_finn.py directory
+python estimate_build.py directory
 ```
 
 Where the parameter `directory` is directory that contains the ONNX model and where the build output will be saved, located inside `models/`.
@@ -54,4 +54,13 @@ There are other possible options:
 - `-fc folding_config` to set the folding configuration file name located in the `config/` directory
 
 
+This step provides just the estimation of the results without actually synthesizing the model, but is a fast way to have an idea of what will be the actual results.
+
+## FINN build
+To actually synthesize the model, in order to then deploy it on a physical board, it is sufficient to run:
+
+```
+python builder.py directory
+```
+The usage of this file is exactly the same as the previous one, it still gives the estimations but it then performs the actual synthesis, providing additional output reports.
 
