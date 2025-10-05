@@ -12,7 +12,7 @@ from typing import Any, List, Optional
 from finn.transformation.fpgadataflow.vitis_build import VitisOptStrategy
 from finn.util.basic import alveo_default_platform, alveo_part_map, pynq_part_map
 
-from finn.builder.build_dataflow_config import DataflowBuildConfig, DataflowOutputType
+from finn.builder.build_dataflow_config import DataflowBuildConfig, DataflowOutputType, ShellFlowType
 from finn.builder.build_dataflow_steps import build_dataflow_step_lookup
 from qonnx.core.modelwrapper import ModelWrapper
 from finn.builder.build_dataflow_steps import *
@@ -70,6 +70,7 @@ def create_build_config(output_dir):
         DataflowOutputType.STITCHED_IP
     ]
     cfg.mvau_optimization = "resource"
+    cfg.shell_flow_type = ShellFlowType.VIVADO_ZYNQ
     return cfg
 
 def execute_build_steps(model, cfg, build_steps, verbose=False):
