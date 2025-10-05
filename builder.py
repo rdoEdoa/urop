@@ -61,7 +61,7 @@ def create_build_config(output_dir):
         split_large_fifos=True,
         enable_build_pdb_debug=True,
         standalone_thresholds=True,
-        ShellFlowType="vivado_zynq"
+        shell_flow_type="vivado_zynq"
     )
     cfg.output_types = [
         DataflowOutputType.ESTIMATE_REPORTS,
