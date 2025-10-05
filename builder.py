@@ -50,7 +50,6 @@ def create_build_config(output_dir):
         generate_outputs=[
             DataflowOutputType.ESTIMATE_REPORTS,
             DataflowOutputType.RTLSIM_PERFORMANCE,
-            DataflowOutputType.BITFILE,
             DataflowOutputType.STITCHED_IP
         ],
         folding_config_file="folding_config.json",
