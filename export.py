@@ -5,8 +5,8 @@ from brevitas.export import export_qonnx
 import os
 
 # Config
-CHECKPOINT_PATH = "./acc_2b/checkpoints_4b/checkpoint_epoch_40.pth.tar"
-ONNX_EXPORT_PATH = "quantcnn_acc2b_4b.onnx"
+CHECKPOINT_PATH = "./checkpoints/checkpoints_8b/checkpoint_epoch_40.pth.tar"
+ONNX_EXPORT_PATH = "model.onnx"
 INPUT_SHAPE = (1, 3, 32, 32)
 
 # Load model and weights
