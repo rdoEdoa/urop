@@ -21,10 +21,10 @@ Moreover, it is necessary to set the directory in which the checkpoints are save
 
 ## Model export
 
-For FINN, it is necessary to have the `.onnx` model file. To obtain it, run the corresponding script:
+For FINN, it is necessary to have the `.onnx` model file. To obtain it, run the script `export.py`:
 
-1) Set in `CHECKPOINT_PATH` the correct path to the checkpoint to export, including its name.
-2) Set in `ONNX_EXPORT_PATH` the path and the name of the model to export; it needs to have the correct file extension `.onnx`.
+1) Set in `CHECKPOINT_PATH` (line 11) the correct path to the checkpoint to export, including its name.
+2) Set in `ONNX_EXPORT_PATH` (line 12) the path and the name of the model to export; it needs to have the correct file extension `.onnx`.
 3) Run the script:
 
 ```
