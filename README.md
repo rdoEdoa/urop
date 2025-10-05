@@ -38,7 +38,7 @@ To use FINN, first it needs to be properly installed and configured. To do so, f
 
 https://finn.readthedocs.io/en/latest/getting_started.html
 
-Then, while inside the FINN environment (to enter it, just run `./run-docker` while inside the cloned repo), it is sufficient to run the `build_finn.py` script. This will prepare the model conversion to HW and produce a set of reports with the estimation of some parameters of the generated model (like timing, resource usage, etc.). 
+Then, while inside the FINN environment (to enter it, just run `./run-docker` while inside the cloned repo), it is sufficient to run the `estimate_build.py` script. This will prepare the model conversion to HW and produce a set of reports with the estimation of some parameters of the generated model (like timing, resource usage, etc.). 
 
 To run it:
 
@@ -52,4 +52,6 @@ There are other possible options:
 - `-m model_name` to set the name of the ONNX model file located in the specified directory.
 - `-o output_dir` to set the name of the output directory for the build results inside the model directory.
 - `-fc folding_config` to set the folding configuration file name located in the `config/` directory
+
+
 
