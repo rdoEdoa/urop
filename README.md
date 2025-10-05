@@ -23,7 +23,7 @@ Moreover, it is necessary to set the directory in which the checkpoints are save
 
 For FINN, it is necessary to have the `.onnx` model file. To obtain it, run the corresponding script:
 
-1) Set in `CHECKPOINT_PATH` the correct path to checkpoint to export, including its name.
+1) Set in `CHECKPOINT_PATH` the correct path to the checkpoint to export, including its name.
 2) Set in `ONNX_EXPORT_PATH` the path and the name of the model to export; it needs to have the correct file extension `.onnx`.
 3) Run the script:
 
@@ -31,14 +31,14 @@ For FINN, it is necessary to have the `.onnx` model file. To obtain it, run the 
 python export.py
 ```
 
-NOTE: this will retrieve what is needed from the neural network model, but it will attempt to continue the training if needed; therefore, to just export the model, it is necessary to set, in `qat_cnn.py`, `desired_epochs` = `num_epochs` = the epoch of the checkpoint to export.
+NOTE: this will retrieve what is needed from the neural network model, but it will attempt to continue the training; therefore, to just export the model, it is necessary to set, in `qat_cnn.py`, `desired_epochs` = `num_epochs` = the epoch of the checkpoint to export.
 
 ## FINN build estimation
 To use FINN, first it needs to be properly installed and configured. To do so, follow the Quickstart guide on the official website:
 
 https://finn.readthedocs.io/en/latest/getting_started.html
 
-Then, while inside the FINN environment (to enter it, just run `./run-docker` while inside the cloned repo), it is sufficient to run the build_finn.py script. This will prepare the model conversion to HW and produce a set of reports with the estimation of some parameters of the generated model (like timing, resource usage, etc.). 
+Then, while inside the FINN environment (to enter it, just run `./run-docker` while inside the cloned repo), it is sufficient to run the `build_finn.py` script. This will prepare the model conversion to HW and produce a set of reports with the estimation of some parameters of the generated model (like timing, resource usage, etc.). 
 
 To run it:
 
